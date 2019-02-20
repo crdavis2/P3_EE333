@@ -3,6 +3,7 @@
  * Author: Collin Davis crdavis2@uab.edu
  * Assignment:  P2 - EE333 Spring 2019
  * Vers: 1.0.0 01/29/2019 CRD - initial coding
+ * Vers: 2.0.0 02/16/2019 crd - changes for P3
  * 
  * Credits - Dr. Green "ConstraintNGTest.java" was used as reference.
  */

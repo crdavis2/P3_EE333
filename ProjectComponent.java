@@ -1,14 +1,14 @@
 /*
  * File: ProjectComponent.java
  * Author: Collin Davis crdavis2@uab.edu
- * Assignment:  P2 - EE333 Spring 2019
+ * Assignment:  P3 - EE333 Spring 2019
  * Vers: 1.0.0 01/31/2019 crd - initial coding
  * Vers: 2.0.0 02/15/2019 crd - revised coding from P2 comments
  */
 
 
 /**
- * Superclass for ProjectComponent
+ *
  * @author Collin Davis crdavis2@uab.edu
  */
 public class ProjectComponent {
@@ -44,7 +44,7 @@ public class ProjectComponent {
     
 
     /**
-     * returns the string "{prefix}-{project assigned ID}: {component-title} ({UID})"
+     * returns the string "{componenttype}-{project assigned ID}: {component-title} ({UID})"
      * example: <code>RI-1: Sample Risk (4)</code>
      *
      * @return formatted string
@@ -80,5 +80,6 @@ public class ProjectComponent {
     
     public void setComponentID(int componentIDCount) {
         componentID = prefix + componentIDCount;
+        componentIDCount++;
     }
 }

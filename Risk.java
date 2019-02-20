@@ -1,7 +1,7 @@
 /*
  * File: Risk.java
  * Author: Collin Davis crdavis2@uab.edu
- * Assignment: P1
+ * Assignment: P3 - EE333 Spring 2019
  * Vers: 1.0.0 01/22/2019 crd - initial coding
  * Vers: 2.0.0 01/29/2019 crd - added superclass capabilities
  * Vers: 3.0.0 02/15/2019 crd - revised coding from P2 comments
@@ -17,12 +17,12 @@ public class Risk extends ProjectComponent {
     private String     mitigation;          // action to reduce Risk
     protected String   riskPrefix  = "RI-";
     private static int riskCount   = 1;     // used to generate UID
-    private int[]      impact;              // measure of severity of Risk
-    private int[]      likelihood;          // measure of certainty that a Risk will happen
+    private int[]      impactArray;         // measure of severity of Risk
+    private int        impact;              // for get purposes
+    private int[]      likelihoodArray;     // measure of certainty that a Risk will happen
+    private int        likelihood;          // for get purposes
     private int        priority;            // product of impact and likelihood
-    private int        averageImpact;       // average impact from an array of impacts
-    private int        averageLikelihood;   // average likelihood form an array of likelihoods
-    
+    private  Logger    logger;            // creates a logger
     
     /**
     * Create a risk with a UID and a title. If title is null, then "Unnamed 
@@ -41,6 +41,7 @@ public class Risk extends ProjectComponent {
         } else {
             this.title = title;
             UID = riskCount;
+            addLogger(logger);
             riskCount++;
         }
     }
@@ -48,31 +49,19 @@ public class Risk extends ProjectComponent {
     /**
     * Get impact of risk if it happens 0-9 with 9 most severe
     * 
-    * @param impact array of impacts accepted
-    * @return averageImpact  average impact value
+    * @return impact impact value
     */
-    public int getImpact(int[] impact) {
-        int sum = 0;
-        
-        for ( int i : impact ) sum += i;
-        averageImpact = sum / impact.length;
-        
-        return averageImpact;
+    public int getImpact() {
+        return impact;
     }
     
     /**
     * Get likelihood of risk occurring 0-9 with 9 being most likely
     * 
-    * @param likelihood array of likelihoods accepted
-    * @return averageLikelihood average likelihood value
+    * @return likelihood likelihood value
     */
-    public int getLikelihood(int[] likelihood) {
-        int sum = 0;
-        
-        for ( int i : likelihood ) sum += i;
-        averageLikelihood = sum / likelihood.length;
-        
-        return averageLikelihood;
+    public int getLikelihood() {
+        return likelihood;
     }
     
     /**
@@ -82,7 +71,7 @@ public class Risk extends ProjectComponent {
     * @return int priority value
     */
     public int priority() {
-        priority =  averageImpact * averageLikelihood;
+        priority =  impact * likelihood;
         return priority;
     }
     
@@ -95,6 +84,23 @@ public class Risk extends ProjectComponent {
         return mitigation;
     }
     
+    /**
+    * Set (change) the impact of the risk if it happens. Bounding between 0 
+    * and 9 enforced so that, as examples, -1 would be saved as 0 and 220 
+    * would be saved as 9.
+    * 
+    * @param value new impact value array 0-9 with 9 most severe
+    */
+    public void setImpact(int value) {
+        if (value <= 0) {
+            impact = 0;
+        } else if (value >= 9) {
+            impact = 9;
+        } else {
+            impact = value;
+        }
+    }
+    
     
     /**
     * Set (change) the impact of the risk if it happens. Bounding between 0 
@@ -104,16 +110,38 @@ public class Risk extends ProjectComponent {
     * @param value new impact value array 0-9 with 9 most severe
     */
     public void setImpact(int[] value) {
-        int n = value.length;
+        int n   = value.length;
+        impactArray = new int[n];
+        int sum = 0;
         
-        for (int i = 0; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             if (value[i] <= 0) {
-                impact[i] = 0;
+                impactArray[i] = 0;
             } else if (value[i] >= 9) {
-                impact[i] = 9;
-            } else {
-                impact[i] = value[i];
+                impactArray[i] = 9;
+            } else {    
+                impactArray[i] = value[i];
             }
+        }
+        
+        for ( int i : impactArray ) sum += i;
+        impact = sum / impactArray.length;
+    }
+    
+    /**
+    * Set (change) the likelihood of the risk happening. Bounding between 0 
+    * and 9 enforced so that, as examples, -1 would be saved as 0 and 220 
+    * would be saved as 9.
+    * 
+    * @param value new likelihood value array 0-9 with 9 most severe
+    */
+    public void setLikelihood(int value) {
+        if (value <= 0) {
+            likelihood = 0;
+        } else if (value >= 9) {
+            likelihood = 9;
+        } else {
+            likelihood = value;
         }
     }
     
@@ -126,16 +154,21 @@ public class Risk extends ProjectComponent {
     */
     public void setLikelihood(int[] value) {
         int n = value.length;
+        likelihoodArray = new int[n];
+        int sum = 0;
         
-        for (int i = 0; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             if (value[i] <= 0) {
-                likelihood[i] = 0;
+                likelihoodArray[i] = 0;
             } else if (value[i] >= 9) {
-                likelihood[i] = 9;
+                likelihoodArray[i] = 9;
             } else {
-                likelihood[i] = value[i];
+                likelihoodArray[i] = value[i];
             }
         }
+        
+        for ( int i : likelihoodArray ) sum += i;
+        likelihood = sum / likelihoodArray.length;
     }
     
     /**
@@ -173,6 +206,15 @@ public class Risk extends ProjectComponent {
     @Override
     public String toString() {
         return componentID + ": " + title + " (" + UID + ")";
+    }
+    
+    /**
+     * Logs changes to the state of a Project
+     * 
+     * @param logger default logger type 
+     */
+    private void addLogger(Logger logger) {
+        this.logger = logger;
     }
                 
 }

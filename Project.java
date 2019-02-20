@@ -1,7 +1,7 @@
 /*
  * File: Project.java
  * Author: Collin Davis crdavis2@uab.edu
- * Assignment: P1
+ * Assignment: P3 - EE333 Spring 2019
  * Vers: 1.0.0 01/22/2019 crd - initial coding
  * Vers: 1.0.1 01/23/2019 crd - added working sort algorithm for risk;
  * Vers: 2.0.0 01/31/2019 crd - revised coding for P2 
@@ -28,6 +28,7 @@ public class Project {
     private  Constraint[]         constraints;       // creates constraints of type Constraint
     private  Goal[]               goals;             // creates goals of type Goals
     private  Risk[]               risks;             // creates risks of type Risks
+    private  Logger               logger;            // creates a logger
     
     // Index Variables
     private int           ConstraintCounter     = 0; // tracks constraints for getNextConstraint
@@ -50,10 +51,10 @@ public class Project {
         } else {
             this.title = title;
         }
-        
         constraints = new Constraint[MAX_CONSTRAINTS];
         goals = new Goal[MAX_GOALS];
         risks = new Risk[MAX_RISKS];
+        addLogger(logger);
         projectCount++;
     }
 
@@ -254,5 +255,14 @@ public class Project {
 
             merge(arr, l, m, r);
         }
+    }
+    
+    /**
+     * Logs changes to the state of a Project
+     * 
+     * @param logger default logger type 
+     */
+    private void addLogger(Logger logger) {
+        this.logger = logger;
     }
 }
