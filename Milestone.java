@@ -24,49 +24,25 @@ public class Milestone extends ProjectComponent {
     private String  actualDateString;        // used for retrieving actual completion date
     private String  description;             // description of the milestone
     
-    private int     milestoneCount = 0;      // tracks # of Milestones
-    private int     milestoneID    = 1;
-    
     private boolean completed;               // true if Milestone is completed, false otherwise
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
     // above sets a more user-friendly format for the dates
     
     /**
-     * Creates a Milestone with a description, planned completion date and
-     * actual completion date.If no actual completion date is given, then 
-     * it will simply not be set. Dates must be in yyyy-MM-dd format in 
-     * order to work.
-     * 
-     * @param description general description of the milestone
-     * @param plannedCompletionDate expected date of milestone completion
-     * @param actualCompletionDate actual date of milestone completion
-     * @param completed indicates if the new Milestone has already been completed
-     */
-    public Milestone(String description, String plannedCompletionDate, 
-            String actualCompletionDate, boolean completed) {
-        this.description = description;
-        this.completed = completed;
-        this.plannedDateString = plannedCompletionDate;
-        this.actualDateString = actualCompletionDate;
-        
-        try {
-            this.plannedCompletionDate = sdf.parse(plannedCompletionDate);
-        } catch (ParseException e) {
-            // won't happen if parameters are formatted correctly
-        }
-        
-        
-        if (actualCompletionDate == null) {
-            // do nothing
-        } else {
-            // set actualCompletionDate to input
-            try {
-                this.actualCompletionDate = sdf.parse(actualCompletionDate);
-            } catch (ParseException e) {
-                // won't happen if parameters are formatted correctly
-            }
-        }       
+    * Create a Milestone with a UID and a title. If title is null, then "Unnamed 
+    * milestone" shall be used for the title of the milestone. The other properties are   
+    * set to legal values like 0 or "" such that the milestone object holds
+    * valid values at all time.
+    * 
+    * @param title description for milestone
+    */
+    public Milestone(String title) {
+        super(title);
+        description = title;
+        plannedDateString = "";
+        actualDateString  = "";
+        completed = false;
     } 
     
     /**
@@ -105,16 +81,36 @@ public class Milestone extends ProjectComponent {
     }
     
     /**
-     * Set a new planned completion date
+     * Set a planned completion date or change the current one
      * 
-     * @param newPlannedCompletionDate new date for planned completion
+     * @param plannedCompletionDate new date for planned completion
      */
-    public void setPlannedCompletionDate(String newPlannedCompletionDate) {
+    public void setPlannedCompletionDate(String plannedCompletionDate) {
+        plannedDateString = plannedCompletionDate;
         try {
-            this.plannedCompletionDate = sdf.parse(newPlannedCompletionDate);
+            this.plannedCompletionDate = sdf.parse(plannedCompletionDate);
         } catch (ParseException e) {
-            System.out.println("Unable to parse " + newPlannedCompletionDate);
+            // won't happen if parameters are formatted correctly
         }
+    }
+    
+    /**
+     * Set an actual completion date or change the current date
+     * 
+     * @param actualCompletionDate date for actual completion
+     */
+    public void setActualCompletionDate(String actualCompletionDate) {
+        actualDateString = actualCompletionDate;
+        if (actualCompletionDate != null) {
+            try {
+                this.actualCompletionDate = sdf.parse(actualCompletionDate);
+            } catch (ParseException e) {
+                // won't happen if parameters are formatted correctly
+            }
+        } else {
+            // actualCompletionDate is null
+        }
+            
     }
     
     /**

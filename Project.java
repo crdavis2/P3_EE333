@@ -26,7 +26,7 @@ public class Project {
     private  Constraint[] constraints  = new Constraint[COMPONENT_SIZE];    
     private  Goal[] goals              = new Goal[COMPONENT_SIZE];             
     private  Risk[] risks              = new Risk[COMPONENT_SIZE];
-    private  Logger               logger;            // creates a logger
+    private  Logger logger;            // creates a logger
     
     // Index Variables
     private int           ConstraintCounter     = 0; // tracks constraints for getNextConstraint

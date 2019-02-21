@@ -22,6 +22,11 @@ public class Constraint extends ProjectComponent {
     */
     public Constraint(String title) {
         super(title);
+        if (title == null) {
+            this.title = "Unnamed constraint";
+        } else {
+            this.title = title;
+        }
     }
     
     /**

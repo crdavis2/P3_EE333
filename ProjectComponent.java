@@ -16,8 +16,8 @@ public abstract class ProjectComponent {
 
     protected String title; // title of the component
     protected String componentID;
-    protected int    componentCount   = 0;
-    protected int    UID;                   // unique ID for the component
+    protected static int    componentCount   = 0;
+    protected int    UID;   // unique ID for the component
    
     
     public ProjectComponent(String title) {
@@ -31,7 +31,7 @@ public abstract class ProjectComponent {
     }
 
     /**
-     * Get the UID for the sensor CO-{number}, CO-{number}, CO-{number}
+     * Get the UID for the component
      *
      * @return component UID
      */
@@ -57,7 +57,7 @@ public abstract class ProjectComponent {
      */
     @Override
     public String toString() {
-        return componentID + ": " + title + "(" + UID + ")";
+        return componentID + ": " + title + " (" + UID + ")";
     }
 
     /**

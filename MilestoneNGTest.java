@@ -5,7 +5,6 @@
  * Vers: 1.0.0 02/20/2019 CRD - initial coding
  */
 
-import java.util.Date;
 import static org.testng.Assert.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -26,9 +25,9 @@ public class MilestoneNGTest {
 
     @BeforeMethod
     public void setUpMethod() throws Exception {
-        m1 = new Milestone("Example milestone 1", "2019-02-28", "", false);
-        m2 = new Milestone("Finish this project", "2019-02-21", "2019-02-21", true);
-        m3 = new Milestone("Project completed early", "2019-02-26", "2019-02-20", true);
+        m1 = new Milestone("Example milestone 1");
+        m2 = new Milestone("Finish this project");
+        m3 = new Milestone("Project completed early");
     }
 
     @AfterMethod
@@ -49,6 +48,9 @@ public class MilestoneNGTest {
      */
     @Test
     public void testGetPlannedCompletionDate() {
+        m1.setPlannedCompletionDate("2019-02-28");
+        m2.setPlannedCompletionDate("2019-02-21");
+        m3.setPlannedCompletionDate("2019-02-26");
         assertEquals(m1.getPlannedCompletionDate(), "2019-02-28");
         assertEquals(m2.getPlannedCompletionDate(), "2019-02-21");
         assertEquals(m3.getPlannedCompletionDate(), "2019-02-26");
@@ -59,6 +61,9 @@ public class MilestoneNGTest {
      */
     @Test
     public void testGetActualCompletionDate() {
+        m1.setActualCompletionDate("");
+        m2.setActualCompletionDate("2019-02-21");
+        m3.setActualCompletionDate("2019-02-20");
         assertEquals(m1.getActualCompletionDate(), "");
         assertEquals(m2.getActualCompletionDate(), "2019-02-21");
         assertEquals(m3.getActualCompletionDate(), "2019-02-20");

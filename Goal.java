@@ -21,6 +21,11 @@ public class Goal extends ProjectComponent {
      */
     public Goal(String title) {
         super(title);
+        if (title == null) {
+            this.title = "Unnamed goal";
+        } else {
+            this.title = title;
+        }
     }
     
     /**

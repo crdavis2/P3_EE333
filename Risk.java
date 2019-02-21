@@ -18,7 +18,7 @@ public class Risk extends ProjectComponent {
     private String     mitigation = "";     // action to reduce Risk
     private int        impact;              // for get purposes
     private int        likelihood;          // for get purposes
-    private  Logger    logger;              // creates a logger
+    private Logger     logger;              // creates a logger
     
     /**
     * Create a risk with a UID and a title. If title is null, then "Unnamed 
@@ -30,6 +30,11 @@ public class Risk extends ProjectComponent {
     */
     public Risk(String title) {
         super(title);
+        if (title == null) {
+            this.title = "Unnamed risk";
+        } else {
+            this.title = title;
+        }
     }
     
     /**
