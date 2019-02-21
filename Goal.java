@@ -12,12 +12,7 @@
  * @author Collin Davis crdavis2@uab.edu
  */
 public class Goal extends ProjectComponent {
-    
-    // Instance Variables
-    private static int    goalCount  = 1;     // used to generate UID
-    private final  String goalPrefix = "GO-"; // string prefix for goals
-    
-      
+     
     /**
      * Create a goal with a UID and a title. If the title is null, then "Unnamed
      * goal" shall be used for the title of the goal.
@@ -26,37 +21,14 @@ public class Goal extends ProjectComponent {
      */
     public Goal(String title) {
         super(title);
-        if (title == null) {
-            this.title = "Unnamed goal";
-            UID = goalCount;
-            goalCount++;
-        } else {
-            this.title = title;
-            UID = goalCount;
-            goalCount++;
-        }
-    }
-    
-    @Override
-    public String getComponentPrefix() {
-        prefix = goalPrefix;
-        return prefix;
-    }
-    
-    @Override
-    public void setComponentID(int componentIDCount) {
-        componentID = goalPrefix + componentIDCount;
     }
     
     /**
-     * returns the string "GO-{project assigned ID}: {goal-title} ({UID})"
-     * example: <code>GO-1: Sample Goal (4)</code>
-     *
-     * @return formatted string
+     * Return the constraint prefix "GO-" to allow construction of project component IDs
+     * @return "GO-"
      */
     @Override
-    public String toString() {
-        return componentID + ": " + title + " (" + UID + ")";
+    public String getComponentPrefix() {
+        return "GO-";
     }
-
 }

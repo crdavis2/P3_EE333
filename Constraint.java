@@ -13,10 +13,6 @@
  */
 public class Constraint extends ProjectComponent {
     
-    // Instance Variables
-    private static int    constraintCount  = 1;     // used to generate UID
-    private final  String constraintPrefix = "CO-"; // string prefix for constraints
-    
     /**
     * Create a constraint with a UID and a name. If name is null,
     * then "Unnamed constraint" shall be used for the
@@ -26,34 +22,15 @@ public class Constraint extends ProjectComponent {
     */
     public Constraint(String title) {
         super(title);
-        if (title == null) {
-            this.title = "Unnamed constraint";
-        } else {
-            this.title = title;
-        }
-        UID = constraintCount;
-        constraintCount++;
-    }
-    
-    @Override
-    public String getComponentPrefix() {
-        return constraintPrefix;
-    }
-    
-    @Override
-    public void setComponentID(int componentIDCount) {
-        componentID = constraintPrefix + componentIDCount;
     }
     
     /**
-     * returns the string "CO-{project assigned ID}: {constraint-title} ({UID})"
-     * example: <code>CO-1: Sample Constraint (4)</code>
-     *
-     * @return formatted string
+     * Return the constraint prefix "CO-" to allow construction of project component IDs
+     * @return "CO-"
      */
     @Override
-    public String toString() {
-        return componentID + ": " + title + " (" + UID + ")";
+    public String getComponentPrefix() {
+        return "CO-";
     }
     
 }

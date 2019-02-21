@@ -5,6 +5,7 @@
  * Vers: 1.0.0 01/22/2019 crd - initial coding
  * Vers: 2.0.0 01/29/2019 crd - added superclass capabilities
  * Vers: 3.0.0 02/15/2019 crd - revised coding from P2 comments
+ *      with respect to furnished P2 comments and solution from Dr. David Green
  */
 
 /**
@@ -14,36 +15,21 @@
 public class Risk extends ProjectComponent {
     
     // Instance Variables
-    private String     mitigation;          // action to reduce Risk
-    protected String   riskPrefix  = "RI-";
-    private static int riskCount   = 1;     // used to generate UID
-    private int[]      impactArray;         // measure of severity of Risk
+    private String     mitigation = "";     // action to reduce Risk
     private int        impact;              // for get purposes
-    private int[]      likelihoodArray;     // measure of certainty that a Risk will happen
     private int        likelihood;          // for get purposes
-    private int        priority;            // product of impact and likelihood
-    private  Logger    logger;            // creates a logger
+    private  Logger    logger;              // creates a logger
     
     /**
     * Create a risk with a UID and a title. If title is null, then "Unnamed 
     * risk" shall be used for the title of the risk. The other properties are   
-    * set to legal values like 0, "" such that the Risk object
+    * set to legal values like 0, "" such that the Risk object holds
     * valid values at all time.
     * 
     * @param title text for risk
     */
     public Risk(String title) {
         super(title);
-        if (title == null) {
-            this.title = "Unnamed risk";
-            UID = riskCount;
-            riskCount++;
-        } else {
-            this.title = title;
-            UID = riskCount;
-            addLogger(logger);
-            riskCount++;
-        }
     }
     
     /**
@@ -71,8 +57,7 @@ public class Risk extends ProjectComponent {
     * @return int priority value
     */
     public int priority() {
-        priority =  impact * likelihood;
-        return priority;
+        return impact * likelihood;
     }
     
     /**
@@ -92,13 +77,7 @@ public class Risk extends ProjectComponent {
     * @param value new impact value array 0-9 with 9 most severe
     */
     public void setImpact(int value) {
-        if (value <= 0) {
-            impact = 0;
-        } else if (value >= 9) {
-            impact = 9;
-        } else {
-            impact = value;
-        }
+        impact = bound(value);
     }
     
     
@@ -107,25 +86,14 @@ public class Risk extends ProjectComponent {
     * and 9 enforced so that, as examples, -1 would be saved as 0 and 220 
     * would be saved as 9.
     * 
-    * @param value new impact value array 0-9 with 9 most severe
+    * @param values new impact value array 0-9 with 9 most severe
     */
-    public void setImpact(int[] value) {
-        int n   = value.length;
-        impactArray = new int[n];
+    public void setImpact(int[] values) {
         int sum = 0;
-        
-        for (int i = 0; i < n; i++) {
-            if (value[i] <= 0) {
-                impactArray[i] = 0;
-            } else if (value[i] >= 9) {
-                impactArray[i] = 9;
-            } else {    
-                impactArray[i] = value[i];
-            }
+        for (int i = 0; i < values.length; i++) {
+            sum += bound(values[i]);
         }
-        
-        for ( int i : impactArray ) sum += i;
-        impact = sum / impactArray.length;
+        impact = (sum + values.length/2) / values.length;
     }
     
     /**
@@ -136,13 +104,7 @@ public class Risk extends ProjectComponent {
     * @param value new likelihood value array 0-9 with 9 most severe
     */
     public void setLikelihood(int value) {
-        if (value <= 0) {
-            likelihood = 0;
-        } else if (value >= 9) {
-            likelihood = 9;
-        } else {
-            likelihood = value;
-        }
+        likelihood = bound(value);
     }
     
     /**
@@ -150,25 +112,14 @@ public class Risk extends ProjectComponent {
     * and 9 enforced so that, as examples, -1 would be saved as 0 and 220 
     * would be saved as 9.
     * 
-    * @param value new likelihood value array 0-9 with 9 most severe
+    * @param values new likelihood value array 0-9 with 9 most severe
     */
-    public void setLikelihood(int[] value) {
-        int n = value.length;
-        likelihoodArray = new int[n];
+    public void setLikelihood(int[] values) {
         int sum = 0;
-        
-        for (int i = 0; i < n; i++) {
-            if (value[i] <= 0) {
-                likelihoodArray[i] = 0;
-            } else if (value[i] >= 9) {
-                likelihoodArray[i] = 9;
-            } else {
-                likelihoodArray[i] = value[i];
-            }
+        for (int i = 0; i < values.length; i++) {
+            sum += bound(values[i]);
         }
-        
-        for ( int i : likelihoodArray ) sum += i;
-        likelihood = sum / likelihoodArray.length;
+        likelihood = (sum + values.length/2) / values.length;
     }
     
     /**
@@ -186,35 +137,40 @@ public class Risk extends ProjectComponent {
         }
     }
     
-    @Override
-    public String getComponentPrefix() {
-        prefix = riskPrefix;
-        return prefix;
-    }
-    
-    @Override
-    public void setComponentID(int componentIDCount) {
-        componentID = riskPrefix + componentIDCount;
-    }
-    
     /**
-     * returns the string "RI-{project assigned ID}: {risk-title} ({UID})"
-     * example: <code>RI-1: Sample Risk (4)</code>
-     *
-     * @return formatted string
+     * Return the constraint prefix "RI-" to allow construction of project component IDs
+     * @return "RI-"
      */
     @Override
-    public String toString() {
-        return componentID + ": " + title + " (" + UID + ")";
+    public String getComponentPrefix() {
+        return "RI-";
     }
+    
+    // bound value between 0 and 9
+    private int bound(int value) {
+        int newValue;
+        
+        newValue = Math.max(0, value);
+        newValue = Math.min(newValue, 9);
+        return newValue;
+    }
+    
     
     /**
      * Logs changes to the state of a Project
+     * If addLogger is called more than once, it will simply print that it has
+     * been called to.
      * 
      * @param logger default logger type 
      */
     private void addLogger(Logger logger) {
-        this.logger = logger;
+        if (this.logger == logger) {
+            // Logger has already been created
+            System.out.println("Logger has already been added.");
+        } else{
+            // Logger has not been created yet
+            this.logger = logger;
+        }
     }
                 
 }

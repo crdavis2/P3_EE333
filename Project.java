@@ -19,24 +19,24 @@ public class Project {
     // Instance Variables //
     
     // Constants
-    private static final int MAX_CONSTRAINTS   = 10; // Max constraints accepted
-    private static final int MAX_GOALS         = 10; // Max goals accepted
-    private static final int MAX_RISKS         = 10; // Max risks accepted
+    private static final int COMPONENT_SIZE = 10;
     
     // String and Class Variables
-    private  String               title;             // title of Project
-    private  Constraint[]         constraints;       // creates constraints of type Constraint
-    private  Goal[]               goals;             // creates goals of type Goals
-    private  Risk[]               risks;             // creates risks of type Risks
+    private  String title;             // title of Project
+    private  Constraint[] constraints  = new Constraint[COMPONENT_SIZE];    
+    private  Goal[] goals              = new Goal[COMPONENT_SIZE];             
+    private  Risk[] risks              = new Risk[COMPONENT_SIZE];
     private  Logger               logger;            // creates a logger
     
     // Index Variables
     private int           ConstraintCounter     = 0; // tracks constraints for getNextConstraint
     private int           GoalCounter           = 0; // tracks goals for getNextGoal
     private int           RiskCounter           = 0; // tracks risks for getNextRisk
+    
     private int           numConstraints        = 0; // tracks constraints for addConstraint
     private int           numGoals              = 0; // tracks goals for addGoal
     private int           numRisks              = 0; // tracks risks for addRisk
+    
     public  static int    projectCount          = 1; // used to generate project assigned ID
 
     /**
@@ -51,11 +51,6 @@ public class Project {
         } else {
             this.title = title;
         }
-        constraints = new Constraint[MAX_CONSTRAINTS];
-        goals = new Goal[MAX_GOALS];
-        risks = new Risk[MAX_RISKS];
-        addLogger(logger);
-        projectCount++;
     }
 
     /**
@@ -89,9 +84,8 @@ public class Project {
      * @return goal object if one exists or null otherwise
      */
     public Goal getNextGoal() {
-        if (GoalCounter < MAX_GOALS) {
-            GoalCounter++;
-            return goals[GoalCounter];
+        if (GoalCounter < numGoals) {
+            return goals[GoalCounter++];
         } else {
             return null;
         }
@@ -106,9 +100,8 @@ public class Project {
     * @return constraint object if one exists or null otherwise
     */
     public Constraint getNextConstraint() {
-        if (ConstraintCounter < MAX_CONSTRAINTS) {
-            ConstraintCounter++;
-            return constraints[ConstraintCounter];
+        if (ConstraintCounter < numConstraints) {
+            return constraints[ConstraintCounter++];
         } else {
             return null;
         }
@@ -126,7 +119,7 @@ public class Project {
         if (RiskCounter == 0) {
             sort(risks, 0, numRisks - 1);
         }
-        if (RiskCounter <= MAX_RISKS) {
+        if (RiskCounter <= COMPONENT_SIZE) {
             RiskCounter++;
             return risks[RiskCounter - 1];
         } else {
@@ -140,9 +133,8 @@ public class Project {
      * @param constraint the constraint to add to the project
      */
     public void addConstraint(Constraint constraint) {
-        if (numConstraints < MAX_CONSTRAINTS) {
-            constraints[numConstraints] = constraint;
-            numConstraints++;
+        if (numConstraints < COMPONENT_SIZE) {
+            constraints[numConstraints++] = constraint;
         } else {
             // some error handling goes here
         }
@@ -154,9 +146,8 @@ public class Project {
      * @param goal the goal to add to the project
      */
     public void addGoal(Goal goal) {
-        if (numGoals < MAX_GOALS) {
-            goals[numGoals] = goal;
-            numGoals++;
+        if (numGoals < COMPONENT_SIZE) {
+            goals[numGoals++] = goal;
         } else {
             // some error handling goes here
         }
@@ -168,9 +159,8 @@ public class Project {
      * @param risk the risk to add to the project
      */
     public void addRisk(Risk risk) {
-        if (numRisks < MAX_RISKS) {
-            risks[numRisks] = risk;
-            numRisks++;
+        if (numRisks < COMPONENT_SIZE) {
+            risks[numRisks++] = risk;
         } else {
             // some error handling goes here
         }
@@ -259,10 +249,18 @@ public class Project {
     
     /**
      * Logs changes to the state of a Project
+     * If addLogger is called more than once, it will simply print that it has
+     * been called to.
      * 
      * @param logger default logger type 
      */
     private void addLogger(Logger logger) {
-        this.logger = logger;
+        if (this.logger == logger) {
+            // Logger has already been created
+            System.out.println("Logger has already been added.");
+        } else{
+            // Logger has not been created yet
+            this.logger = logger;
+        }
     }
 }

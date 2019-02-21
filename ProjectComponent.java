@@ -3,7 +3,8 @@
  * Author: Collin Davis crdavis2@uab.edu
  * Assignment:  P3 - EE333 Spring 2019
  * Vers: 1.0.0 01/31/2019 crd - initial coding
- * Vers: 2.0.0 02/15/2019 crd - revised coding from P2 comments
+ * Vers: 2.0.0 02/15/2019 crd - revised coding for P3 from P2 comments
+ *      with respect to furnished P2 comments and solution from Dr. David Green
  */
 
 
@@ -11,17 +12,22 @@
  *
  * @author Collin Davis crdavis2@uab.edu
  */
-public class ProjectComponent {
+public abstract class ProjectComponent {
 
     protected String title; // title of the component
-    protected String prefix           = "";
-    protected String componentID      = "";
-    protected int    componentIDCount = 1;
+    protected String componentID;
+    protected int    componentCount   = 0;
     protected int    UID;                   // unique ID for the component
    
     
     public ProjectComponent(String title) {
-        this.title = title;
+        if (title == null) {
+            this.title = "Unnamed component";
+        } else {
+            this.title = title;
+        }
+        UID = componentCount++;
+        componentID = "";
     }
 
     /**
@@ -51,7 +57,7 @@ public class ProjectComponent {
      */
     @Override
     public String toString() {
-        return prefix + componentIDCount + ": " + title + "(" + UID + ")";
+        return componentID + ": " + title + "(" + UID + ")";
     }
 
     /**
@@ -68,18 +74,14 @@ public class ProjectComponent {
         }
     }
     
-    
-    public String getComponentPrefix() {
-        return prefix;
-    }
-    
     public String getComponentID() {
         return componentID;
     }
+    
+    public abstract String getComponentPrefix();
 
     
-    public void setComponentID(int componentIDCount) {
-        componentID = prefix + componentIDCount;
-        componentIDCount++;
+    public void setComponentID(int ID) {
+        componentID = getComponentPrefix() + ID;
     }
 }
