@@ -28,6 +28,12 @@ public class MilestoneNGTest {
         m1 = new Milestone("Example milestone 1");
         m2 = new Milestone("Finish this project");
         m3 = new Milestone("Project completed early");
+        m1.setPlannedCompletionDate("2019-02-28");
+        m2.setPlannedCompletionDate("2019-02-21");
+        m3.setPlannedCompletionDate("2019-02-26");
+        m1.setActualCompletionDate(null);
+        m2.setActualCompletionDate("2019-02-21");
+        m3.setActualCompletionDate("2019-02-20");
     }
 
     @AfterMethod
@@ -48,9 +54,6 @@ public class MilestoneNGTest {
      */
     @Test
     public void testGetPlannedCompletionDate() {
-        m1.setPlannedCompletionDate("2019-02-28");
-        m2.setPlannedCompletionDate("2019-02-21");
-        m3.setPlannedCompletionDate("2019-02-26");
         assertEquals(m1.getPlannedCompletionDate(), "2019-02-28");
         assertEquals(m2.getPlannedCompletionDate(), "2019-02-21");
         assertEquals(m3.getPlannedCompletionDate(), "2019-02-26");
@@ -61,10 +64,7 @@ public class MilestoneNGTest {
      */
     @Test
     public void testGetActualCompletionDate() {
-        m1.setActualCompletionDate("");
-        m2.setActualCompletionDate("2019-02-21");
-        m3.setActualCompletionDate("2019-02-20");
-        assertEquals(m1.getActualCompletionDate(), "");
+        assertEquals(m1.getActualCompletionDate(), null);
         assertEquals(m2.getActualCompletionDate(), "2019-02-21");
         assertEquals(m3.getActualCompletionDate(), "2019-02-20");
     }

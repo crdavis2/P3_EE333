@@ -14,10 +14,10 @@
  */
 public abstract class ProjectComponent {
 
-    protected String title; // title of the component
-    protected String componentID;
+    protected String        title; // title of the component
+    protected String        componentID;
     protected static int    componentCount   = 0;
-    protected int    UID;   // unique ID for the component
+    protected int           UID;   // unique ID for the component
    
     
     public ProjectComponent(String title) {
@@ -26,7 +26,7 @@ public abstract class ProjectComponent {
         } else {
             this.title = title;
         }
-        UID = componentCount++;
+        UID = ++componentCount;
         componentID = "";
     }
 

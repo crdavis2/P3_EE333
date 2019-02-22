@@ -33,12 +33,18 @@ public class TestP3 {
         Risk       r2 = new Risk("r2");
         Risk       r3 = new Risk("r3");
         
+        Milestone  m1 = new Milestone("m1");
+        Milestone  m2 = new Milestone("m2");
+        Milestone  m3 = new Milestone("m3");
+        
         Project    p1 = new Project("p1");
         
-        println("g1 then c1 then r1 then p1 without anything more than constructor");
+        println("g1 then c1 then r1 then m1 then p1 without anything more than "
+                + "constructor");
         println(g1);
         println(c1);
         println(r1);
+        println(m1);
         println(p1);
         
         r1.setImpact(5);

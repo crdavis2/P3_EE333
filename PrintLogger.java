@@ -52,7 +52,7 @@ public class PrintLogger implements Logger {
     }
     
     /**
-    * Prints a string to stdout if level is >= threshold.
+    * Prints a string to stdout if level is greater than or equal to threshold.
     * The printing routine will add a newline to the logEntry.
     * The Logger class defines common values for level.
     * @param level value noting the type of the information

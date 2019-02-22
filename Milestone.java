@@ -23,7 +23,7 @@ public class Milestone extends ProjectComponent {
     private String  plannedDateString;       // used for retrieving planned completion date
     private String  actualDateString;        // used for retrieving actual completion date
     private String  description;             // description of the milestone
-    
+        
     private boolean completed;               // true if Milestone is completed, false otherwise
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -69,6 +69,7 @@ public class Milestone extends ProjectComponent {
      * @return plannedCompletionDate planned completion date in String form
      */
     public String getPlannedCompletionDate() {
+        
         return plannedDateString;
     }
     
@@ -107,8 +108,10 @@ public class Milestone extends ProjectComponent {
             } catch (ParseException e) {
                 // won't happen if parameters are formatted correctly
             }
+            completed = true;
         } else {
             // actualCompletionDate is null
+            completed = false;
         }
             
     }

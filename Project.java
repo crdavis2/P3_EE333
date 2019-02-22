@@ -8,42 +8,46 @@
  * Vers: 3.0.0 02/15/2019 crd - revised coding from P2 comments for P3
  */
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.ArrayList;
+
 /**
  * Generic Project
  * @author Collin Davis crdavis2@uab.edu
  */
 public class Project {
 
-    
-    
     // Instance Variables //
     
     // Constants
-    private static final int COMPONENT_SIZE = 10;
+    private static final int SIZE = 10;
     
     // String and Class Variables
-    private  String title;             // title of Project
-    private  Constraint[] constraints  = new Constraint[COMPONENT_SIZE];    
-    private  Goal[] goals              = new Goal[COMPONENT_SIZE];             
-    private  Risk[] risks              = new Risk[COMPONENT_SIZE];
-    private  Logger logger;            // creates a logger
+    private  String       title;                              // title of Project
+    private  Constraint[] constraints  = new Constraint[SIZE];    
+    private  Goal[]       goals        = new Goal[SIZE];             
+    private  Risk[]       risks        = new Risk[SIZE];
+    private  Milestone[]  milestones   = new Milestone[SIZE];
+    private  Logger       logger;                             // creates a logger
     
     // Index Variables
-    private int           ConstraintCounter     = 0; // tracks constraints for getNextConstraint
-    private int           GoalCounter           = 0; // tracks goals for getNextGoal
-    private int           RiskCounter           = 0; // tracks risks for getNextRisk
+    ArrayList<String> milestoneDateString = new ArrayList<>();
+    private int numberGoals               = 0;
+    private int numberConstraints         = 0;
+    private int numberRisks               = 0;
+    private int numberMilestones          = 0;
     
-    private int           numConstraints        = 0; // tracks constraints for addConstraint
-    private int           numGoals              = 0; // tracks goals for addGoal
-    private int           numRisks              = 0; // tracks risks for addRisk
+    private int nextGoalIndex             = 0;
+    private int nextConstraintIndex       = 0;
+    private int nextRiskIndex             = 0;
     
-    public  static int    projectCount          = 1; // used to generate project assigned ID
-
     /**
-     * Constructor for objects of class Project with title
-
-     * @param title text for title. If null, the project title will
-     * be set to "Unnamed project"
+     * Models an effort to do something (build a product, write a paper,
+     * marketing campaign, etc.)
+     *
+     * @param title text titling the project. If null, the project name will be
+     * set to "Unnamed project"
      */
     public Project(String title) {
         if (title == null) {
@@ -53,104 +57,51 @@ public class Project {
         }
     }
 
+    // Queries
     /**
      * Get the title of the project
      *
-     * @return the text of the project title
+     * @return the title of the project name
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Represent a text description of the project like: {title} with {#constraints}
-     * constraints, {#goals}, and {#risks} risks.
-     * 
-     * @return string as described
+     * Represent a text description of the project like
+     *   {title} with {#constraints} constraints, {#goals} goals, and {#risks} risks.
+     * @return  string as described
      */
     @Override
     public String toString() {
-        return title + " with " + numConstraints + " constraints, " + numGoals +
-                " goals, and " + numRisks + " risks.";
+        return title + " with " + numberConstraints + " constraints, " +
+                                  numberGoals       + " goals, "       + "and " +
+                                  numberRisks       + " risks.";
     }
 
-    /**
-     * Get the next goal if it exists. The first time called, it will return the
-     * first goal. The method <code>reset()</code> will reset the object such that
-     * it will return the first goal on the next invocation of
-     * <code>getNextGoal()</code> after the <code>reset()</code>.
-     * The order of the goals will be the ordered they were added to the object.
-     * 
-     * @return goal object if one exists or null otherwise
-     */
-    public Goal getNextGoal() {
-        if (GoalCounter < numGoals) {
-            return goals[GoalCounter++];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-    * Get the next constraint if it exists. The first time called, it will return
-    * the first constraint. The method <code>reset()</code> will reset the object
-    * such that it will return the first constraint on the next invocation of
-    * <code>getNextConstraint()</code> after the <code>reset()</code>.
-    * 
-    * @return constraint object if one exists or null otherwise
-    */
-    public Constraint getNextConstraint() {
-        if (ConstraintCounter < numConstraints) {
-            return constraints[ConstraintCounter++];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Get the next risk if it exists in priority order. The first time called, it
-     * will return the highest priority risk. The method <code>reset()</code> will
-     * reset the object such that it will return the first risk on the next
-     * invocation of <code>getNextRisk()</code> after the <code>reset()</code>.
-     * 
-     * @return risk object if one exists or null otherwise
-     */
-    public Risk getNextRisk() {
-        if (RiskCounter == 0) {
-            sort(risks, 0, numRisks - 1);
-        }
-        if (RiskCounter <= COMPONENT_SIZE) {
-            RiskCounter++;
-            return risks[RiskCounter - 1];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Add constraint to the project
-     *
-     * @param constraint the constraint to add to the project
-     */
-    public void addConstraint(Constraint constraint) {
-        if (numConstraints < COMPONENT_SIZE) {
-            constraints[numConstraints++] = constraint;
-        } else {
-            // some error handling goes here
-        }
-    }
-
+    // Commands
     /**
      * Add goal to the project
      *
      * @param goal the goal to add to the project
      */
     public void addGoal(Goal goal) {
-        if (numGoals < COMPONENT_SIZE) {
-            goals[numGoals++] = goal;
-        } else {
-            // some error handling goes here
+        if (numberGoals < SIZE) {
+            goals[numberGoals++] = goal;
         }
+        updateNumbering(goals, numberGoals);
+    }
+
+    /**
+     * Add constraint to the project
+     *
+     * @param constraint the constraint to add to project
+     */
+    public void addConstraint(Constraint constraint) {
+        if (numberConstraints < SIZE) {
+            constraints[numberConstraints++] = constraint;
+        }
+        updateNumbering(constraints, numberConstraints);
     }
 
     /**
@@ -159,91 +110,88 @@ public class Project {
      * @param risk the risk to add to the project
      */
     public void addRisk(Risk risk) {
-        if (numRisks < COMPONENT_SIZE) {
-            risks[numRisks++] = risk;
-        } else {
-            // some error handling goes here
+        if (numberRisks < SIZE) {
+            risks[numberRisks++] = risk;
+        }
+        
+        // let Arrays sort risks array in descending using 
+        // r.priority() as the sort index
+        
+        if ( numberRisks > 1) {
+            Arrays.sort(risks, 0, numberRisks, 
+                        Comparator.comparingInt( r -> -r.priority() ) );
+            
+        }
+        updateNumbering(risks, numberRisks);
+    }
+    
+    // set component numbering to be sequential in array starting at 1 (index+1)
+    private void updateNumbering(ProjectComponent[] components, int numberComponents) {
+        for (int i = 0; i < numberComponents; i++) {
+            components[i].setComponentID(i+1);
         }
     }
 
     /**
      * Reset the getNextGoal, getNextConstraint, getNextRisk behaviors to start
-     * again at the "first" item to allow sequencing through the list again
+     * again at the "first" item again to allow sequencing through the list
+     * again.
      */
     public void reset() {
-        GoalCounter       = 0;
-        RiskCounter       = 0;
-        ConstraintCounter = 0;
+        nextGoalIndex           = 0;
+        nextConstraintIndex     = 0;
+        nextRiskIndex           = 0;
     }
 
-    // Functions to sort risks from max to min for getNextRisk
-    // Yes, it was tedious/time-consuming to implement merge-sort sorting algorithm
+    // Other behavior
     /**
-     * Apply merge-sort procedure to array of risks once each side of the
-     * array has been sorted from max to min
-     * 
-     * @param arr array of type Risk to be sorted/merged
-     * @param l left-hand starting point of array (beginning of array)
-     * @param m middle of the array
-     * @param r right hand starting point of array (end of array)
+     * Get the next goal if it exists. The first time called, it will return the
+     * first goal. The method <code>reset()</code> will reset the object such
+     * that it will return the first goal on the next invocation of
+     * <code>getNextGoal()</code> after the <code>reset()</code>.
+     *
+     * The order of the goals will be the ordered they were added to the object.
+     *
+     * @return goal object if one exists or null otherwise
      */
-     private void merge(Risk[] arr, int l, int m, int r) {
-        int n1 = m - l + 1;
-        int n2 = r - m;
-        Risk[] L = new Risk[n1];
-        Risk[] R = new Risk[n2];
-
-        for (int i = 0; i < n1; i++) {
-            L[i] = arr[l + i];
-        }
-
-        for (int j = 0; j < n2; j++) {
-            R[j] = arr[m + 1 + j];
-        }
-        int i = 0, j = 0;
-
-        int k = l;
-        while (i < n1 && j < n2) {
-            if (L[i].priority() > R[j].priority()) {
-                arr[k] = L[i];
-                i++;
-            } else {
-                arr[k] = R[j];
-                j++;
-            }
-            k++;
-        }
-
-        while (i < n1) {
-            arr[k] = L[i];
-            i++;
-            k++;
-        }
-
-        while (j < n2) {
-            arr[k] = R[j];
-            j++;
-            k++;
+    public Goal getNextGoal() {
+        if (nextGoalIndex < numberGoals) {
+            return goals[nextGoalIndex++];
+        } else {
+           return null;
         }
     }
 
-     /**
-      * Takes array of risks, splits into a left and right side,
-      * sorts left side from max to min, sorts right side from max to min,
-      * calls merge function to reform the array
-      * 
-      * @param arr array of type Risk to be sorted/merged
-      * @param l left-hand starting point of array (beginning of array)
-      * @param r right hand starting point of array (end of array)
-      */
-    private void sort(Risk[] arr, int l, int r) {
-        if (l < r) {
-            int m = (l + r) / 2;
+    /**
+     * Get the next constraint if it exists. The first time called, it will
+     * return the first constraint. The method <code>reset()</code> will reset
+     * the object such that it will return the first constraint on the next
+     * invocation of <code>getNextConstraint()</code> after the
+     * <code>reset()</code>.
+     *
+     * @return constraint object if one exists or null otherwise
+     */
+    public Constraint getNextConstraint() {
+        if (nextConstraintIndex < numberConstraints) {
+            return constraints[nextConstraintIndex++];
+        } else {
+            return null;
+        }
+    }
 
-            sort(arr, l, m);
-            sort(arr, m + 1, r);
-
-            merge(arr, l, m, r);
+    /**
+     * Get the next risk if it exists in priority order. The first time called,
+     * it will return the highest priority risk. The method <code>reset()</code>
+     * will reset the object such that it will return the first risk on the next
+     * invocation of <code>getNextRisk()</code> after the <code>reset()</code>.
+     *
+     * @return risk object if one exists or null otherwise
+     */
+    public Risk getNextRisk() {
+        if (nextRiskIndex < numberRisks) {
+            return risks[nextRiskIndex++];
+        } else {
+            return null;
         }
     }
     
